@@ -5,8 +5,11 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_socketio import SocketIO, emit
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+load_dotenv()
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
@@ -15,14 +18,14 @@ app.config["SECRET_KEY"] = "b'2\xec\x7f\x12\x04\xf4\x13A\x04i1\xd4\xa0\xf6\x1d\x
 socketio = SocketIO(app)
 Session(app)
 
-engine = create_engine("postgresql://wsxxnzhydsbosx:9d5e915237ad9d8434a42e0edfec4ae04825e8fda5fb5b80077015651780edd7@ec2-54-75-246-118.eu-west-1.compute.amazonaws.com:5432/d1c0fg0tsnnrsk")
+db = os.getenv('DB')
+engine = create_engine(db)
 #engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 consonants = ('b', 'c', 'd', 'f', 'g', 'h', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'z')
 vowels = ('a', 'e', 'i', 'o', 'u')
 
-#postgres://wsxxnzhydsbosx:9d5e915237ad9d8434a42e0edfec4ae04825e8fda5fb5b80077015651780edd7@ec2-54-75-246-118.eu-west-1.compute.amazonaws.com:5432/d1c0fg0tsnnrsk
 province = db.execute("SELECT * FROM province").fetchall()
 province.sort()
 
